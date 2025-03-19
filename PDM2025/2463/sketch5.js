@@ -35,7 +35,7 @@ let colors = [
   }
   
   function mousePressed() {
-    // Check if the user clicks inside the palette
+    
     if (mouseX < paletteWidth) {
       let index = floor(mouseY / 40);
       if (index >= 0 && index < colors.length) {
@@ -52,7 +52,7 @@ let colors = [
     }
   
   
-    // Keep the palette visible
+ 
     drawPalette();
 
   }
