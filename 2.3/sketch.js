@@ -3,7 +3,7 @@ let img;
 let isMousePressed = false;
 
 function preload() {
-  img = loadImage('media/dominican_sound_systems_culture_fo_85682d5c-460_x2.jpg'); // Update the path to your image
+  img = loadImage('media/dominican_sound_systems_culture_fo_85682d5c-460_x2.jpg'); 
 }
 
 function setup() {
@@ -37,7 +37,7 @@ function setup() {
 function draw() {
   background(220);
   if (isMousePressed) {
-    image(img, 0, 0, width, height); // Display the image
+    image(img, 0, 0, width, height); 
   }
 }
 
