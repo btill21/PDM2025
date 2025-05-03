@@ -12,6 +12,11 @@ let highScore = 0;
 let dinosaurSprite, dinosaurRunning, dinosaurJumping;
 let obstacleSprite, obstacleAnimation;
 
+let sampler;
+let backgroundMusic;
+let jumpSound;
+let newSound;
+
 function preload() {
   dinosaurRunning = loadImage('Media/craftpix-net-622999-free-pixel-art-tiny-hero-sprites/2 Owlet_Monster/Owlet_Monster_Run_6.png');
   dinosaurJumping = loadImage('Media/craftpix-net-622999-free-pixel-art-tiny-hero-sprites/2 Owlet_Monster/Owlet_Monster_Jump_8.png');
@@ -23,6 +28,13 @@ function setup() {
   createCanvas(1200, 600); 
   textSize(24);
   resetSketch();
+  soundSetup();
+}
+
+function soundSetup(){
+  sampler = new Tone.Sampler({
+    urls: { C4: "Media/Sounds/cartoon-jump-6462.mp3"},
+  });
 }
 
 function keyPressed() {

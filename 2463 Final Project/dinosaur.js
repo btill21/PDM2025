@@ -25,6 +25,8 @@ class Dinosaur {
     if (this.y === height - this.height - this.offsetFromGround) { 
       this.vy = -this.jumpStrength;
       this.currentAnimation = "jumping";
+
+      sampler.triggerAttackRelease("C4", "8n");
     }
   }
 
