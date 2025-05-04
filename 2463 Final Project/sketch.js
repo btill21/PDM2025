@@ -182,6 +182,10 @@ function draw() {
       str = str.trim();
       if (str === "jump"){
         dinosaur.jump();
+      } else if (str.startsWith("volume:")) {
+        let raw = Number(str.split(":")[1]);
+        let normalized = map(raw, 0, 1023, 0, 1); // Map to 0.0–1.0
+        setGameVolume(normalized);
       }
       }
     }
@@ -325,4 +329,11 @@ function drawStartScreen() {
   textSize(24);
   text("Start Game", width / 2, height * 3/4);
 }
+
+function setGameVolume(v) {
+  if (jumpSound) jumpSound.setVolume(v);
+  if (hurtSound) hurtSound.setVolume(v);
+  if (backgroundMusic) backgroundMusic.setVolume(v);
+}
+
 
