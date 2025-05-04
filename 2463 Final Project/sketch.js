@@ -13,6 +13,8 @@ let hurtSound;        // Sound effect for getting hurt
 let lastSpeedIncrease = 0; // Tracks when speed was last increased
 let gameStarted = false;   // New state to track if game has started
 let jumpPressed = false;
+
+
 let port; // arduino
 let connectionButton; // Button to connect to Arduino
 // sprites
@@ -40,16 +42,17 @@ function setup() {
   textSize(24);
   soundSetup();
   resetSketch();
+
+  port = createSerial();
+  connectionButton = createButton('Connect to Arduino');
+  connectionButton.mousePressed(connect);
   
-  // Setup serial port
- // port = createSerial();
-  //connectionButton = createButton('Connect to Arduino');
-  //connectionButton.position(10,10);
-  //connectButton.mousePressed(() => {
-    //port.open();  // triggers browser permission prompt
-  //});
+
 }
 
+function connect() {
+  port.open('Arduino', 9600);
+}
 
 /**
  * Game sound setup
@@ -119,17 +122,16 @@ function resetSketch() {
   new Obstacle();
   randint = int(random(50, 150));
   
-  // Reset Arduino
-  //if (port.opened()) {
-    //port.write("reset\n");
-  //}
+  
+
   
   loop();
+  if (port && port.opened()) {
+    port.write("reset\n"); // Send reset signal to Arduino
+  }
 }
 
-//function connect() {
- // port.open('Arduino', 9600);
-//}
+
 
 /**
  * Handles sprites and their animations
@@ -174,15 +176,17 @@ class SpriteAnimation {
 function draw() {
   background(220);
 
-  // Check for serial messages
-  //let str = port.readUntil('\n');
-  //if (str) {
-  //str = str.trim();
-  //if (str === "jump") {
-   // console.log("Arduino says jump!");
-    
- // }
-//}
+  if (port && port.opened()) {
+    let str = port.readUntil('\n');
+    if (str) {
+      str = str.trim();
+      if (str === "jump"){
+        dinosaur.jump();
+      }
+      }
+    }
+
+
 
   // Start screen
   if (!gameStarted) {
@@ -238,6 +242,7 @@ function draw() {
       obstacles.splice(i, 1);
       continue;
     }
+
     // Check if dinosaur has passed obstacle and increment score
     // Only increment if obstacle hasn't been hit yet and dinosaur has cleared the obstacle height
     if (!o.hit && dinosaur.x > o.x + o.width && dinosaur.y + 50 <= o.y) {
@@ -255,6 +260,8 @@ function draw() {
       lives -= 1;
       o.hit = true;
 
+      port.write("hit\n"); // Send hit signal to Arduino
+
       dinosaur.currentAnimation = "hurt";
       dinosaur.hurtTimer = dinosaur.hurtDuration;
 
@@ -268,6 +275,7 @@ function draw() {
 
       if (lives <= 0) {
         console.log("Game Over!");
+        port.write("gameover\n"); // Send game over signal to Arduino
         lost = true;
       }
     }
@@ -292,14 +300,7 @@ function draw() {
   dinosaur.move();
   dinosaur.draw();
 
-  // Update Arduino with lives status
- // if (port.opened()) {
- //   if (lost) {
-  //    port.write("gameover\n");
-  //  } else if (lives < 3) {
-  //    port.write("hit\n");
-   // }
-///  }
+ 
 }
 
 function drawStartScreen() {
